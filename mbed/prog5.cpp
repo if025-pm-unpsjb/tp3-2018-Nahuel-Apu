@@ -9,31 +9,44 @@ Serial pc (USBTX, USBRX);
 /*Hacer parpadear un LED, indicado por el usuario, con un intervalo de 250 ms. 
 El LED se indica mediante un número (1 a 4) leído desde la entrada serial.*/
 
+int num = 1;
+
+void callback() {
+    pc.scanf("%d", &num);
+    pc.printf("%d\n", num);
+}
+
 int main() {
+    
+    pc.baud (9600);
+    pc.attach(&callback);
+
     while(1) {
-        char  c = pc. getc ();
-        pc.printf("Tecla %c\n\r", c);
-              
-      switch (c){
-        case '1':
+                      
+      switch (num){
+        case 1:
             myled1 = 1;
-            wait (0.25);
+            wait (1);
             myled1 = 0;
+            wait (1);
             break;
-        case '2':
+        case 2:
             myled2 = 1;
-            wait (0.25);
+            wait (1);
             myled2 = 0;
+            wait (1);
             break;
-        case '3':
+        case 3:
             myled3 = 1;
-            wait (0.25);
+            wait (1);
             myled3 = 0;
+            wait (1);
             break;
-        case '4':
+        case 4:
             myled4 = 1;
-            wait (0.25);
+            wait (1);
             myled4 = 0;
+            wait (1);
             break;
           }
     }
