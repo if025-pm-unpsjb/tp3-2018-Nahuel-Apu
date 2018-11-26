@@ -19,17 +19,48 @@ int main( void )
    boardConfig();
 
    gpioConfig( GPIO1, GPIO_OUTPUT );
-   
-   uartConfig(UART_USB, 9600); 
+   int32_t frecuencia = 1000;
+   uartConfig(UART_USB, 115200); 
    int32_t espera = 1000; 
    int8_t numero = 0;
    int8_t valorLED1 = 0;
    int8_t valorLED2 = 0;
    int8_t valorLED3 = 0;
    int8_t valorLEDB = 0;
+   char entrada[10];
+   bool_t ok = FALSE; 
+   waitForReceiveStringOrTimeout_t waitText;
+   waitForReceiveStringOrTimeoutState_t waitTextState;
   
    // ---------- REPETIR POR SIEMPRE --------------------------
    while( TRUE ) {
+       
+      waitTextState = UART_RECEIVE_STRING_CONFIG;
+       
+      waitText.state = UART_RECEIVE_STRING_CONFIG;
+      waitText.string =  entrada;
+      waitText.stringSize = sizeof(entrada);
+      waitText.timeout = 1000;
+       
+    //ok = receiveBytesUntilReceiveStringOrTimeoutBlocking(UART_USB,"\n", 2, entrada, (uint32_t *) sizeof(entrada), 450);
+      while( waitTextState != UART_RECEIVE_STRING_RECEIVED_OK &&
+             waitTextState != UART_RECEIVE_STRING_TIMEOUT ){
+         waitTextState = waitForReceiveStringOrTimeout( UART_USB, &waitText );
+      }
+      if( waitTextState == UART_RECEIVE_STRING_TIMEOUT ){
+         uartWriteString( UART_USB, "\r\nSalio por timeout\r\n" );
+      }
+
+      if( waitTextState == UART_RECEIVE_STRING_RECEIVED_OK ){
+         uartWriteString( UART_USB, entrada );
+      }
+      //uartWriteString(UART_USB, entrada);
+            
+      frecuencia = atoi(entrada);
+       
+      if ( frecuencia <= 0) {
+          frecuencia = 500;
+      }
            
       valorLEDB = numero & 0x0001; 
       valorLED1 = (numero >> 1) & 0x0001;
@@ -42,7 +73,7 @@ int main( void )
       gpioWrite( LEDB, valorLEDB ); 
        
       /* Retardo bloqueante durante 100ms */
-      delay( espera);
+      delay( frecuencia );
        
       numero++;
      

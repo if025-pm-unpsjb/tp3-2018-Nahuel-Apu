@@ -39,7 +39,7 @@ int main( void )
            
       if ( buttonValue != ledRValue ) {
             ledRValue = gpioToggle( LEDR );
-            ledRaux = ledRValue;
+            ledRaux = (ledRaux == OFF) ? ON:OFF;
       }
       
       // ON-OFF LEDG
@@ -47,7 +47,7 @@ int main( void )
             
       if ( buttonValue != ledGValue ) {
         ledGValue = gpioToggle( LEDG );
-        ledGaux = ledGValue;  
+        ledGaux = (ledGaux == OFF) ? ON:OFF;
       }
      
       // ON-OFF LEDB
@@ -55,7 +55,7 @@ int main( void )
             
       if ( buttonValue != ledBValue ) {
         ledBValue = gpioToggle( LEDB );
-        ledBaux = ledBValue;
+        ledBaux = (ledBaux == OFF) ? ON:OFF;
       }
     
       // ON-OFF LEDRGB
