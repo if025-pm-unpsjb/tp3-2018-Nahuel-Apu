@@ -2,7 +2,6 @@
 // Include Scheduler since we want to manage multiple tasks.
 #include <Scheduler.h>
 int retardo;
-Scheduler scheduler = Scheduler();      //create a scheduler
 
 void setup() {
   // put your setup code here, to run once:
@@ -12,7 +11,7 @@ void setup() {
   // initialize serial:
   Serial.begin(9600);
   retardo = 500;
-  scheduler.startLoop(loop2);
+  Scheduler.startLoop(loop2);
 }
 
 void loop() {
